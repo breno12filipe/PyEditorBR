@@ -12,4 +12,12 @@ if(wxWidgets_USE_FILE)
 endif()
 
 add_executable(PyEditorBr ${SOURCE_FILES})
-target_link_libraries(PyEditorBr ${wxWidgets_LIBRARIES})
+
+add_subdirectory(fileEngine)
+
+target_link_libraries(PyEditorBr PUBLIC FileEngine ${wxWidgets_LIBRARIES})
+
+target_include_directories(PyEditorBr PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          "${PROJECT_SOURCE_DIR}/fileEngine"
+                          )

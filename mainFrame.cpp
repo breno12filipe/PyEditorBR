@@ -5,29 +5,28 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title) {
 
     wxMenu *helpMenu = new wxMenu;
 
-    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
+    fileMenu->Append(wxID_NEW,  wxT("New File"),       wxT("New file"));
+    fileMenu->Append(wxID_OPEN, wxT("Open File"),      wxT("Open a file"));
+    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"),   wxT("Quit this program"));
 
-    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
+    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
 
     wxMenuBar *menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, wxT("&File"));
     menuBar->Append(helpMenu, wxT("&Help"));
 
-    wxRichTextCtrl* m_richText1;
-    m_richText1 = new wxRichTextCtrl( this, wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-
-    //wxButton* HelloWorld;
-    //HelloWorld = new wxButton(this, wxID_ANY, _T("Hello World"), wxDefaultPosition, wxDefaultSize, 0);
-
-    //this->showTxt(m_richText1->GetValue());
+    // wxButton* HelloWorld;
+    // HelloWorld = new wxButton(this, wxID_ANY, _T("Hello World"), wxDefaultPosition, wxDefaultSize, 0);
+    
+    //wxRichTextCtrl* m_richText1;
+    this->m_richText1 = new wxRichTextCtrl(this, wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 
     SetMenuBar(menuBar);
 
-    //CreateStatusBar(2);
-    //SetStatusText(wxT("Welcome to wxWidgets!"));
-
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrame::OnQuit,  this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrame::OnOpen,  this, wxID_OPEN);
+    Bind(wxEVT_MENU, &MainFrame::OnNew,   this, wxID_NEW);
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event) {
@@ -50,6 +49,26 @@ void MainFrame::OnAbout(wxCommandEvent& event) {
     wxMessageBox(msg, wxT("About Minimal"), wxOK | wxICON_INFORMATION, this);
 }
 
-// void MainFrame::showTxt(const wxString& txt) {
-//     wxMessageBox(txt, wxT("About Minimal"));
-// }
+void MainFrame::OnOpen(wxCommandEvent& event) {
+    wxFileDialog * openFileDialog = new wxFileDialog(this);
+
+    if (openFileDialog->ShowModal() == wxID_OK){
+        wxString fileName = openFileDialog->GetPath();
+        std::string fname = fileName.ToStdString();
+
+        auto *fileEngine = new FileEngine(fname);
+
+        this->m_richText1->AppendText(fileEngine->getFileData());
+
+        delete fileEngine;
+    }
+}
+
+void MainFrame::OnNew(wxCommandEvent& event) {
+    // wxFileDialog * openFileDialog = new wxFileDialog(this);
+
+    // if (openFileDialog->ShowModal() == wxID_OK){
+    //     wxString fileName = openFileDialog->GetPath();
+    //     //tc->LoadFile(fileName);     
+    // }
+}

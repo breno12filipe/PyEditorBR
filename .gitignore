@@ -1,2 +1,6 @@
 build/
 CMakeFiles/
+instructions.txt
+settings.json
+main
+main.cpp

@@ -6,11 +6,11 @@
 class FileEngine {
     private:
         std::string fileName_;
-        std::string filePath_;
+        std::string fileRepr_;
     public:
-        FileEngine(std::string name, std::string path);
+        FileEngine(std::string fileName);
         ~FileEngine();
-        void getFileData();
+        std::string getFileData();
         void setFileData(std::string &inputCharacter); // Check the returned type
         std::string getFileName();
         std::string getFilePath();
