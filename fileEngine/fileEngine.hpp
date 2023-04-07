@@ -14,4 +14,5 @@ class FileEngine {
         void setFileData(std::string &inputCharacter); // Check the returned type
         std::string getFileName();
         std::string getFilePath();
+        bool createFile();
 };

@@ -1,6 +1,8 @@
-#include <wx/wx.h>
 #include <iostream>
+#include <wx/wx.h>
 #include <wx/richtext/richtextctrl.h>
+#include <wx/dirdlg.h>
+#include <wx/textdlg.h>
 #include "./fileEngine/fileEngine.hpp"
 
 class MainFrame : public wxFrame {

@@ -45,12 +45,12 @@ void MainFrame::OnQuit(wxCommandEvent& event) {
 void MainFrame::OnAbout(wxCommandEvent& event) {
     wxString msg;
     msg.Printf(wxT("Hello and welcome to %s"), wxVERSION_STRING);
-
     wxMessageBox(msg, wxT("About Minimal"), wxOK | wxICON_INFORMATION, this);
 }
 
 void MainFrame::OnOpen(wxCommandEvent& event) {
     wxFileDialog * openFileDialog = new wxFileDialog(this);
+    this->m_richText1->Clear();
 
     if (openFileDialog->ShowModal() == wxID_OK){
         wxString fileName = openFileDialog->GetPath();
@@ -65,10 +65,24 @@ void MainFrame::OnOpen(wxCommandEvent& event) {
 }
 
 void MainFrame::OnNew(wxCommandEvent& event) {
-    // wxFileDialog * openFileDialog = new wxFileDialog(this);
+    // Pega o nome do arquivo
+    wxTextEntryDialog *nameDialog = new wxTextEntryDialog(this, "File Name", wxGetTextFromUserPromptStr, wxEmptyString, wxTextEntryDialogStyle, wxDefaultPosition);
+    nameDialog->ShowModal();
+    std::string fileName = nameDialog->GetValue().ToStdString();
 
-    // if (openFileDialog->ShowModal() == wxID_OK){
-    //     wxString fileName = openFileDialog->GetPath();
-    //     //tc->LoadFile(fileName);     
-    // }
+    // Pega o caminho do arquivo
+    wxDirDialog* dirDialog = new wxDirDialog(this, wxDirSelectorPromptStr,  wxEmptyString, wxDD_DEFAULT_STYLE, wxDefaultPosition, wxDefaultSize, wxDirDialogNameStr);
+    dirDialog->ShowModal();
+    std::string fileDir = dirDialog->GetPath().ToStdString();
+
+    std::string completeFileName = fileDir + "/" + fileName;
+
+    // Cria o arquivo de fato
+    auto *fileEngine = new FileEngine(completeFileName);
+    fileEngine->createFile();
+
+    wxMessageBox("File Created Successfully", wxT("Success"), wxOK | wxICON_INFORMATION, this);
+
+    this->m_richText1->Clear();
+    this->m_richText1->AppendText(fileEngine->getFileData());
 }

@@ -15,31 +15,21 @@ std::string FileEngine::getFileData(){
         this->fileRepr_.append(otpTxt);
     }
     FileReading.close();
-    return this->fileRepr_; 
+    return this->fileRepr_;
 }
 
 void FileEngine::setFileData(std::string &inputCharacter){
-    // Create the file
-    // std::ofstream outFile(filePath_ + fileName_);
-    // outFile << "# This File was created using PyEditorBr ;)" << std::endl;
-    // outFile.close();
-
-    // if (!outFile) {
-    //     std::cerr << "\033[91mERROR CREATING FILE: " << this->filePath_ << this->fileName_ << std::endl;
-    // }
-
-    // std::ofstream foutput; 
+    // std::ofstream foutput;
     // std::ifstream finput;
     // finput.open(this->filePath_ + this->fileName_);
-    // foutput.open(this->filePath_ + this->fileName_, std::ios::app); 
+    // foutput.open(this->filePath_ + this->fileName_, std::ios::app);
     
     // if(finput.is_open()){
-    //     foutput << inputCharacter; 
+    //     foutput << inputCharacter;
     // }
     
     // finput.close();
-    // foutput.close(); 
-    
+    // foutput.close();
 }
 
 std::string FileEngine::getFileName(){
@@ -48,4 +38,13 @@ std::string FileEngine::getFileName(){
 
 std::string FileEngine::getFilePath(){
     return this->fileName_;
+}
+
+bool FileEngine::createFile(){
+    std::ofstream outFile(this->fileName_);
+    outFile << "# This File was created using PyEditorBr ;)" << std::endl;
+    outFile.close();
+    if (!outFile) {
+        std::cerr << "\033[91mERROR CREATING FILE: " << this->fileName_ << this->fileName_ << std::endl;
+    }
 }
