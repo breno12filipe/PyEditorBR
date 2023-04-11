@@ -1,32 +1,29 @@
 #include "mainFrame.hpp"
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title) {
-    wxMenu *fileMenu = new wxMenu;
-
-    wxMenu *helpMenu = new wxMenu;
-
-    fileMenu->Append(wxID_NEW,  wxT("New File"),       wxT("New file"));
-    fileMenu->Append(wxID_OPEN, wxT("Open File"),      wxT("Open a file"));
-    fileMenu->Append(wxID_EXIT, wxT("E&xit\tAlt-X"),   wxT("Quit this program"));
-
-    helpMenu->Append(wxID_ABOUT, wxT("&About...\tF1"), wxT("Show about dialog"));
-
+    wxMenu *fileMenu   = new wxMenu;
+    wxMenu *helpMenu   = new wxMenu;
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, wxT("&File"));
-    menuBar->Append(helpMenu, wxT("&Help"));
-
-    // wxButton* HelloWorld;
-    // HelloWorld = new wxButton(this, wxID_ANY, _T("Hello World"), wxDefaultPosition, wxDefaultSize, 0);
+    this->m_richText1  = new wxRichTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
     
-    //wxRichTextCtrl* m_richText1;
-    this->m_richText1 = new wxRichTextCtrl(this, wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    fileMenu->Append(wxID_NEW,    wxT("New File"),          wxT("New file"));
+    fileMenu->Append(wxID_OPEN,   wxT("Open File"),         wxT("Open a file"));
+    fileMenu->Append(wxID_SAVE,   wxT("Save\tCtrl-S"),      wxT("Save File"));
+    fileMenu->Append(wxID_SAVEAS, wxT("&Auto Save...\tF1"), wxT("AutoSave"));
+    fileMenu->Append(wxID_EXIT,   wxT("E&xit\tAlt-X"),      wxT("Quit this program"));
+    helpMenu->Append(wxID_ABOUT,  wxT("&About...\tF1"),     wxT("Show about dialog"));
+    
+    menuBar->Append(fileMenu, wxT("&File"));
+    menuBar->Append(helpMenu, wxT("&Help")); 
 
     SetMenuBar(menuBar);
 
-    Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &MainFrame::OnQuit,  this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MainFrame::OnOpen,  this, wxID_OPEN);
-    Bind(wxEVT_MENU, &MainFrame::OnNew,   this, wxID_NEW);
+    Bind(wxEVT_MENU, &MainFrame::OnAbout,        this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainFrame::OnQuit,         this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrame::OnOpen,         this, wxID_OPEN);
+    Bind(wxEVT_MENU, &MainFrame::OnNew,          this, wxID_NEW);
+    Bind(wxEVT_MENU, &MainFrame::ToggleAutoSave, this, wxID_SAVEAS);
+    this->m_richText1->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(MainFrame::OnKeyDown), NULL, this);
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event) {
@@ -85,4 +82,27 @@ void MainFrame::OnNew(wxCommandEvent& event) {
 
     this->m_richText1->Clear();
     this->m_richText1->AppendText(fileEngine->getFileData());
+}
+
+// Auto save and highlight functions entrypoint
+void MainFrame::OnKeyDown(wxKeyEvent& event) {
+    wxMessageBox(wxString::Format(wxT("%d"), ((wxKeyEvent &)event).GetKeyCode()), wxT("KeyCode"));
+	event.Skip();
+}
+
+// Functionality to save
+// void MainFrame::OnSave(wxCommandEvent& event) {
+//     std::string s = this->m_richText1->GetValue().ToStdString();
+//     auto *fileEngine = new FileEngine("");
+//     fileEngine->save();
+// }
+
+void MainFrame::ToggleAutoSave(wxCommandEvent& event) {
+    if(this->autoSave){
+        this->autoSave = false;
+        wxMessageBox("Auto Save Disabled", wxT("Auto Save"), wxOK | wxICON_INFORMATION, this);
+    }else{ 
+        this->autoSave = true;
+        wxMessageBox("Auto Save Enabled", wxT("Auto Save"), wxOK | wxICON_INFORMATION, this);
+    }
 }

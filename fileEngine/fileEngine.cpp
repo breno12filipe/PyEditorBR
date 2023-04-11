@@ -18,20 +18,6 @@ std::string FileEngine::getFileData(){
     return this->fileRepr_;
 }
 
-void FileEngine::setFileData(std::string &inputCharacter){
-    // std::ofstream foutput;
-    // std::ifstream finput;
-    // finput.open(this->filePath_ + this->fileName_);
-    // foutput.open(this->filePath_ + this->fileName_, std::ios::app);
-    
-    // if(finput.is_open()){
-    //     foutput << inputCharacter;
-    // }
-    
-    // finput.close();
-    // foutput.close();
-}
-
 std::string FileEngine::getFileName(){
     return this->fileName_;
 }
@@ -47,4 +33,8 @@ bool FileEngine::createFile(){
     if (!outFile) {
         std::cerr << "\033[91mERROR CREATING FILE: " << this->fileName_ << this->fileName_ << std::endl;
     }
+}
+
+void FileEngine::saveFile(){
+
 }

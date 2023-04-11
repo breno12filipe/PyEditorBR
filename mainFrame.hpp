@@ -8,11 +8,14 @@
 class MainFrame : public wxFrame {
     private:
         wxRichTextCtrl* m_richText1;
+        bool autoSave = false;
     public:
         MainFrame(const wxString& title);
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void OnOpen(wxCommandEvent& event);
         void OnNew(wxCommandEvent& event);
-        //void showTxt(const wxString& txt);
+        //void OnSave(wxCommandEvent& event);
+        void OnKeyDown(wxKeyEvent& event);
+        void ToggleAutoSave(wxCommandEvent& event);
 };
