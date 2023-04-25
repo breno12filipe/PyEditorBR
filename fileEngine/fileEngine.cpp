@@ -31,7 +31,8 @@ bool FileEngine::createFile() {
 }
 
 void FileEngine::saveFile(std::string &stringInput) {
-    std::fstream outFile(this->fileName_, std::ios::in | std::ios::out | std::ios::ate);
-    outFile << stringInput;
-    outFile.close();
+  std::fstream outFile(this->fileName_,
+                       std::ios::in | std::ios::out | std::ios::ate);
+  outFile << stringInput;
+  outFile.close();
 }

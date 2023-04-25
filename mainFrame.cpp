@@ -5,8 +5,8 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title) {
   wxMenu *fileMenu = new wxMenu;
   wxMenu *helpMenu = new wxMenu;
   wxMenuBar *menuBar = new wxMenuBar();
-  this->m_richText1 = new wxRichTextCtrl(this, wxID_ANY, wxEmptyString,
-                                         wxDefaultPosition, wxDefaultSize, 9999);
+  this->m_richText1 = new wxRichTextCtrl(
+      this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 9999);
 
   fileMenu->Append(wxID_NEW, wxT("New File"), wxT("New file"));
   fileMenu->Append(wxID_OPEN, wxT("Open File"), wxT("Open a file"));
@@ -28,23 +28,15 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title) {
   Bind(wxEVT_MENU, &MainFrame::ToggleAutoSave, this, wxID_SAVEAS);
   this->m_richText1->Connect(
       wxEVT_KEY_DOWN, wxKeyEventHandler(MainFrame::OnKeyDown), NULL, this);
-  //this->m_richText1->Hide();
+  // this->m_richText1->Hide();
   this->m_richText1->SetEditable(false);
 }
 
 void MainFrame::OnQuit(wxCommandEvent &event) {
-  int dialog_return_value = wxNO;
-  wxMessageDialog *dial =
-      new wxMessageDialog(NULL, _("Do you really want to quit?"), _("Quit"),
-                          wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);
-  dialog_return_value = dial->ShowModal();
-  switch (dialog_return_value) {
-  case wxID_YES:
-    Close(true);
-    break;
-  case wxID_NO:
-    break;
-  };
+  if (wxMessageDialog(NULL, _("Do you really want to quit?"), _("Quit"),
+                          wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION).ShowModal() == wxID_YES) {
+                            Close(true);
+  }
 }
 
 void MainFrame::OnAbout(wxCommandEvent &event) {
@@ -65,7 +57,7 @@ void MainFrame::OnOpen(wxCommandEvent &event) {
 
     auto *fileEngine = new FileEngine(fname);
 
-    //this->m_richText1->Show();
+    // this->m_richText1->Show();
     this->m_richText1->SetEditable(true);
 
     this->m_richText1->AppendText(fileEngine->getFileData());
@@ -101,26 +93,27 @@ void MainFrame::OnNew(wxCommandEvent &event) {
                wxOK | wxICON_INFORMATION, this);
 
   this->m_richText1->Clear();
-  //this->m_richText1->Show();
+  // this->m_richText1->Show();
   this->m_richText1->SetEditable(true);
   this->m_richText1->AppendText(fileEngine->getFileData());
 }
 
 // Auto save and highlight functions entrypoint
-// Este método ainda não está funcionando, ele só grava o ultimo caractere escrito
-void MainFrame::OnKeyDown(wxKeyEvent& event) {
-    if (this->autoSave){
-        std::string s = keyCodeMap.at(event.GetKeyCode());
-        auto *fileEngine = new FileEngine(this->fileName_);
-        fileEngine->saveFile(s);
-    }
-    event.Skip();
+// Este método ainda não está funcionando, ele só grava o ultimo caractere
+// escrito
+void MainFrame::OnKeyDown(wxKeyEvent &event) {
+  if (this->autoSave) {
+    std::string s = keyCodeMap.at(event.GetKeyCode());
+    auto *fileEngine = new FileEngine(this->fileName_);
+    fileEngine->saveFile(s);
+  }
+  event.Skip();
 }
 
-void MainFrame::OnSave(wxCommandEvent& event) {
-    auto *fileEngine = new FileEngine(this->fileName_);
-    std::string s = this->m_richText1->GetValue().ToStdString();
-    fileEngine->saveFile(s);
+void MainFrame::OnSave(wxCommandEvent &event) {
+  auto *fileEngine = new FileEngine(this->fileName_);
+  std::string s = this->m_richText1->GetValue().ToStdString();
+  fileEngine->saveFile(s);
 }
 
 void MainFrame::ToggleAutoSave(wxCommandEvent &event) {
