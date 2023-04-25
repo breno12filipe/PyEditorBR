@@ -3,7 +3,7 @@ project(PyEditorBr)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES pyEditorBr.hpp pyEditorBr.cpp mainFrame.hpp mainFrame.cpp)
+set(SOURCE_FILES pyEditorBr.hpp pyEditorBr.cpp mainFrame.hpp mainFrame.cpp maps.h)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base std richtext)
 

@@ -1,11 +1,12 @@
 #include "mainFrame.hpp"
+#include "maps.h"
 
 MainFrame::MainFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title) {
   wxMenu *fileMenu = new wxMenu;
   wxMenu *helpMenu = new wxMenu;
   wxMenuBar *menuBar = new wxMenuBar();
   this->m_richText1 = new wxRichTextCtrl(this, wxID_ANY, wxEmptyString,
-                                         wxDefaultPosition, wxDefaultSize, 0);
+                                         wxDefaultPosition, wxDefaultSize, 9999);
 
   fileMenu->Append(wxID_NEW, wxT("New File"), wxT("New file"));
   fileMenu->Append(wxID_OPEN, wxT("Open File"), wxT("Open a file"));
@@ -27,7 +28,8 @@ MainFrame::MainFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title) {
   Bind(wxEVT_MENU, &MainFrame::ToggleAutoSave, this, wxID_SAVEAS);
   this->m_richText1->Connect(
       wxEVT_KEY_DOWN, wxKeyEventHandler(MainFrame::OnKeyDown), NULL, this);
-  this->m_richText1->Hide();
+  //this->m_richText1->Hide();
+  this->m_richText1->SetEditable(false);
 }
 
 void MainFrame::OnQuit(wxCommandEvent &event) {
@@ -63,7 +65,8 @@ void MainFrame::OnOpen(wxCommandEvent &event) {
 
     auto *fileEngine = new FileEngine(fname);
 
-    this->m_richText1->Show();
+    //this->m_richText1->Show();
+    this->m_richText1->SetEditable(true);
 
     this->m_richText1->AppendText(fileEngine->getFileData());
 
@@ -98,7 +101,8 @@ void MainFrame::OnNew(wxCommandEvent &event) {
                wxOK | wxICON_INFORMATION, this);
 
   this->m_richText1->Clear();
-  this->m_richText1->Show();
+  //this->m_richText1->Show();
+  this->m_richText1->SetEditable(true);
   this->m_richText1->AppendText(fileEngine->getFileData());
 }
 
@@ -106,11 +110,11 @@ void MainFrame::OnNew(wxCommandEvent &event) {
 // Este método ainda não está funcionando, ele só grava o ultimo caractere escrito
 void MainFrame::OnKeyDown(wxKeyEvent& event) {
     if (this->autoSave){
-        std::string s = this->GetKeyName(event).ToStdString();
+        std::string s = keyCodeMap.at(event.GetKeyCode());
         auto *fileEngine = new FileEngine(this->fileName_);
         fileEngine->saveFile(s);
-        event.Skip();
     }
+    event.Skip();
 }
 
 void MainFrame::OnSave(wxCommandEvent& event) {
@@ -129,144 +133,4 @@ void MainFrame::ToggleAutoSave(wxCommandEvent &event) {
     wxMessageBox("Auto Save Enabled", wxT("Auto Save"),
                  wxOK | wxICON_INFORMATION, this);
   }
-}
-
-// helper function that returns textual description of wx virtual keycode
-const char* MainFrame::GetVirtualKeyCodeName(int keycode) {
-    switch ( keycode )
-    {
-#define WXK_(x) \
-        case WXK_##x: return #x;
-
-        WXK_(BACK)
-        WXK_(TAB)
-        WXK_(RETURN)
-        WXK_(ESCAPE)
-        WXK_(SPACE)
-        WXK_(DELETE)
-        WXK_(START)
-        WXK_(LBUTTON)
-        WXK_(RBUTTON)
-        WXK_(CANCEL)
-        WXK_(MBUTTON)
-        WXK_(CLEAR)
-        WXK_(SHIFT)
-        WXK_(ALT)
-        WXK_(CONTROL)
-        WXK_(MENU)
-        WXK_(PAUSE)
-        WXK_(CAPITAL)
-        WXK_(END)
-        WXK_(HOME)
-        WXK_(LEFT)
-        WXK_(UP)
-        WXK_(RIGHT)
-        WXK_(DOWN)
-        WXK_(SELECT)
-        WXK_(PRINT)
-        WXK_(EXECUTE)
-        WXK_(SNAPSHOT)
-        WXK_(INSERT)
-        WXK_(HELP)
-        WXK_(NUMPAD0)
-        WXK_(NUMPAD1)
-        WXK_(NUMPAD2)
-        WXK_(NUMPAD3)
-        WXK_(NUMPAD4)
-        WXK_(NUMPAD5)
-        WXK_(NUMPAD6)
-        WXK_(NUMPAD7)
-        WXK_(NUMPAD8)
-        WXK_(NUMPAD9)
-        WXK_(MULTIPLY)
-        WXK_(ADD)
-        WXK_(SEPARATOR)
-        WXK_(SUBTRACT)
-        WXK_(DECIMAL)
-        WXK_(DIVIDE)
-        WXK_(F1)
-        WXK_(F2)
-        WXK_(F3)
-        WXK_(F4)
-        WXK_(F5)
-        WXK_(F6)
-        WXK_(F7)
-        WXK_(F8)
-        WXK_(F9)
-        WXK_(F10)
-        WXK_(F11)
-        WXK_(F12)
-        WXK_(F13)
-        WXK_(F14)
-        WXK_(F15)
-        WXK_(F16)
-        WXK_(F17)
-        WXK_(F18)
-        WXK_(F19)
-        WXK_(F20)
-        WXK_(F21)
-        WXK_(F22)
-        WXK_(F23)
-        WXK_(F24)
-        WXK_(NUMLOCK)
-        WXK_(SCROLL)
-        WXK_(PAGEUP)
-        WXK_(PAGEDOWN)
-        WXK_(NUMPAD_SPACE)
-        WXK_(NUMPAD_TAB)
-        WXK_(NUMPAD_ENTER)
-        WXK_(NUMPAD_F1)
-        WXK_(NUMPAD_F2)
-        WXK_(NUMPAD_F3)
-        WXK_(NUMPAD_F4)
-        WXK_(NUMPAD_HOME)
-        WXK_(NUMPAD_LEFT)
-        WXK_(NUMPAD_UP)
-        WXK_(NUMPAD_RIGHT)
-        WXK_(NUMPAD_DOWN)
-        WXK_(NUMPAD_PAGEUP)
-        WXK_(NUMPAD_PAGEDOWN)
-        WXK_(NUMPAD_END)
-        WXK_(NUMPAD_BEGIN)
-        WXK_(NUMPAD_INSERT)
-        WXK_(NUMPAD_DELETE)
-        WXK_(NUMPAD_EQUAL)
-        WXK_(NUMPAD_MULTIPLY)
-        WXK_(NUMPAD_ADD)
-        WXK_(NUMPAD_SEPARATOR)
-        WXK_(NUMPAD_SUBTRACT)
-        WXK_(NUMPAD_DECIMAL)
-        WXK_(NUMPAD_DIVIDE)
-
-        WXK_(WINDOWS_LEFT)
-        WXK_(WINDOWS_RIGHT)
-#ifdef __WXOSX__
-        WXK_(RAW_CONTROL)
-#endif
-#undef WXK_
-
-    default:
-        return NULL;
-    }
-}
-
-// helper function that returns textual description of key in the event
-wxString MainFrame::GetKeyName(const wxKeyEvent &event)
-{
-    int keycode = event.GetKeyCode();
-    const char* virt = GetVirtualKeyCodeName(keycode);
-    if ( virt )
-        return virt;
-    if ( keycode > 0 && keycode < 32 )
-        return wxString::Format("Ctrl-%c", (unsigned char)('A' + keycode - 1));
-    if ( keycode >= 32 && keycode < 128 )
-        return wxString::Format("'%c'", (unsigned char)keycode);
-
-#if wxUSE_UNICODE
-    int uc = event.GetUnicodeKey();
-    if ( uc != WXK_NONE )
-        return wxString::Format("'%c'", uc);
-#endif
-
-    return "unknown";
 }
